@@ -1,12 +1,13 @@
 package java_code.services;
 
+import java_code.dto.admin.AdminPersonDTO;
 import java_code.dto.user.AccountDTO;
 import java_code.dto.user.PersonDTO;
 import java_code.mappers.AccountMapper;
 import java_code.mappers.PersonMapper;
 import java_code.models.Person;
 import java_code.repositories.PersonRepository;
-import java_code.util.exceptions.PersonNotFoundException;
+import java_code.util.exceptions.businessLayer.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Person findByUsername(String username) {
+    Person findByUsername(String username) {
         Optional<Person> optionalPerson = personRepository.findByUsername(username);
         if (optionalPerson.isPresent())
             return optionalPerson.get();
@@ -33,8 +34,20 @@ public class PersonService {
         throw new PersonNotFoundException("Person with such name: " + username + " wasn't found");
     }
 
-    public List<Person> findAll() {
+    public AdminPersonDTO findAdminPersonDTOByUsername(String username){
+        Person person = findByUsername(username);
+        return PersonMapper.INSTANCE.toAdminPersonDTO(person);
+    }
+
+    private List<Person> findAll() {
         return personRepository.findAll();
+    }
+
+    public List<AdminPersonDTO> findAllAdminPersonDTOs(){
+        List<Person> personList = findAll();
+        List<AdminPersonDTO> adminPersonDTOS = personList.stream().
+                map(x->PersonMapper.INSTANCE.toAdminPersonDTO(x)).collect(Collectors.toList());
+        return adminPersonDTOS;
     }
 
     @Transactional
@@ -45,7 +58,7 @@ public class PersonService {
     }
 
     private void enrichPerson(Person person) {
-        person.setCreated_at(LocalDateTime.now());
+        person.setCreatedAt(LocalDateTime.now());
         person.setRole("ROLE_USER");
         String encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);

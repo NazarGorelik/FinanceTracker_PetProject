@@ -1,6 +1,5 @@
 package java_code.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -26,22 +25,16 @@ public class Person {
     @Column(name = "username")
     private String username;
 
-    //this field will not go to json
-    @JsonIgnore
     @NotEmpty
     @Column(name = "password")
     private String password;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner")
     private List<Account> accounts;
-
-    public void setAccounts(Account account) {
-        this.accounts.add(account);
-    }
 }

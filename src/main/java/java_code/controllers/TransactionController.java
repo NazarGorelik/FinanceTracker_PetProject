@@ -7,7 +7,7 @@ import java_code.dto.user.responses.TransactionsResponse;
 import java_code.security.UserPrincipal;
 import java_code.services.TransactionService;
 import java_code.util.ErrorUtil;
-import java_code.util.exceptions.TransactionNotCreatedException;
+import java_code.util.exceptions.presentationLayer.TransactionNotCreatedException;
 import java_code.util.validators.TransactionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +23,11 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final TransactionValidator transactionValidator;
-    private final ErrorUtil errorUtil = new ErrorUtil();
+    private final ErrorUtil errorUtil;
 
 
     @PostMapping("/{accountName}/saveTransaction")
-    public ResponseEntity<HttpStatus> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
+    public ResponseEntity<?> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
                                            @PathVariable("accountName") String accountName,
                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         transactionValidator.validate(transactionDTO, bindingResult);

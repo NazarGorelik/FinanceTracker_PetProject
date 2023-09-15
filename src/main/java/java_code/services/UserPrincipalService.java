@@ -3,7 +3,7 @@ package java_code.services;
 import java_code.models.Person;
 import java_code.repositories.PersonRepository;
 import java_code.security.UserPrincipal;
-import java_code.util.exceptions.PersonNotFoundException;
+import java_code.util.exceptions.businessLayer.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

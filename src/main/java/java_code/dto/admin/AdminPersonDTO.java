@@ -1,8 +1,10 @@
 package java_code.dto.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record AdminPersonDTO (int id, String username, String password, LocalDateTime created_at,
+public record AdminPersonDTO (int id, String username, @JsonIgnore String password, LocalDateTime createdAt,
                               String role, List<AdminAccountDTO> accounts){}
 

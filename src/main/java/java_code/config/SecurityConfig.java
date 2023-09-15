@@ -36,7 +36,6 @@ public class SecurityConfig {
 
         //make Spring aware that before each request we want to call our jwt filter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         http
                 .cors().disable()
                 .csrf().disable()

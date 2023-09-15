@@ -7,8 +7,8 @@ import java_code.dto.user.PersonDTO;
 import java_code.services.AuthService;
 import java_code.services.PersonService;
 import java_code.util.ErrorUtil;
-import java_code.util.exceptions.InvalidCredentialsException;
-import java_code.util.exceptions.PersonNotCreatedException;
+import java_code.util.exceptions.presentationLayer.InvalidCredentialsException;
+import java_code.util.exceptions.presentationLayer.PersonNotCreatedException;
 import java_code.util.validators.AuthValidator;
 import java_code.util.validators.PersonValidator;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AuthController {
     private final PersonService personService;
     private final PersonValidator personValidator;
     private final AuthValidator authValidator;
-    private final ErrorUtil errorUtil = new ErrorUtil();
+    private final ErrorUtil errorUtil;
 
 
     @PostMapping("/login")
@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
+    public ResponseEntity<?> registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
         personValidator.validate(personDTO, bindingResult);
         if (bindingResult.hasErrors())
             throw new PersonNotCreatedException(errorUtil.builtErrorResponse(bindingResult));

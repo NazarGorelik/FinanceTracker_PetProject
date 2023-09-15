@@ -28,7 +28,7 @@ public class Account {
     private Double balance;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @NotNull
     @Column(name="name")
@@ -38,6 +38,6 @@ public class Account {
     @JoinColumn(name = "owner", referencedColumnName = "username")
     private Person owner;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
 }

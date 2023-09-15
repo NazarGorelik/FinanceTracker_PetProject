@@ -6,7 +6,7 @@ import java_code.dto.user.AccountDTO;
 import java_code.security.UserPrincipal;
 import java_code.services.AccountService;
 import java_code.util.ErrorUtil;
-import java_code.util.exceptions.AccountNotCreatedException;
+import java_code.util.exceptions.presentationLayer.AccountNotCreatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,11 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 
     private final AccountService accountService;
-    private final ErrorUtil errorUtil = new ErrorUtil();
+    private final ErrorUtil errorUtil;
 
 
     @PostMapping("/saveAccount")
-    public ResponseEntity<HttpStatus> createAccount(@RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult,
+    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult,
                                                     @AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (bindingResult.hasErrors())
             throw new AccountNotCreatedException(errorUtil.builtErrorResponse(bindingResult));
