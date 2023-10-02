@@ -19,8 +19,8 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
     @NotNull
     @Min(value = 0)
@@ -38,6 +38,6 @@ public class Account {
     @JoinColumn(name = "owner", referencedColumnName = "username")
     private Person owner;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 }

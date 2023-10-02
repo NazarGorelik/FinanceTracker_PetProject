@@ -27,7 +27,7 @@ public class AdminController {
     private final AccountService accountService;
 
     @GetMapping("/allPeople")
-    public ResponseEntity<List<?>> getAllPeople(){
+    public ResponseEntity<List<AdminPersonDTO>> getAllPeople(){
         return new ResponseEntity<>(personService.findAllAdminPersonDTOs(), HttpStatus.OK);
     }
 

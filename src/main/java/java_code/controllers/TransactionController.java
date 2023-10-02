@@ -27,7 +27,7 @@ public class TransactionController {
 
 
     @PostMapping("/{accountName}/saveTransaction")
-    public ResponseEntity<?> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
+    public ResponseEntity<HttpStatus> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
                                            @PathVariable("accountName") String accountName,
                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         transactionValidator.validate(transactionDTO, bindingResult);

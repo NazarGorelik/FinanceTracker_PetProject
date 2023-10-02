@@ -25,7 +25,7 @@ public class AccountController {
 
 
     @PostMapping("/saveAccount")
-    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult,
+    public ResponseEntity<HttpStatus> createAccount(@RequestBody @Valid AccountDTO accountDTO, BindingResult bindingResult,
                                                     @AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (bindingResult.hasErrors())
             throw new AccountNotCreatedException(errorUtil.builtErrorResponse(bindingResult));

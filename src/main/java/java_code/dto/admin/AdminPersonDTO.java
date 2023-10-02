@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record AdminPersonDTO (int id, String username, @JsonIgnore String password, LocalDateTime createdAt,
+public record AdminPersonDTO (Integer id, String username, @JsonIgnore String password, LocalDateTime createdAt,
                               String role, List<AdminAccountDTO> accounts){}
 

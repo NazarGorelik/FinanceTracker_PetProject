@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
+    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
         personValidator.validate(personDTO, bindingResult);
         if (bindingResult.hasErrors())
             throw new PersonNotCreatedException(errorUtil.builtErrorResponse(bindingResult));

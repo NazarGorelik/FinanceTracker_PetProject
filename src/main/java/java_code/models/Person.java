@@ -18,8 +18,8 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
     @NotEmpty
     @Column(name = "username")
@@ -35,6 +35,6 @@ public class Person {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Account> accounts;
 }
