@@ -22,6 +22,9 @@ public interface PersonMapper {
     AdminPersonDTO toAdminPersonDTO(Person person);
 
     default List<AdminAccountDTO> mapAccounts(Person person){
-        return person.getAccounts().stream().map(x->AccountMapper.INSTANCE.toAdminAccountDTO(x)).collect(Collectors.toList());
+        if(!person.getAccounts().isEmpty())
+            return person.getAccounts().stream().map(x->AccountMapper.INSTANCE.toAdminAccountDTO(x)).collect(Collectors.toList());
+
+        return null;
     }
 }
