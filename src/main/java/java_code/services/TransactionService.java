@@ -37,7 +37,7 @@ public class TransactionService {
     @Transactional
     public void save(TransactionDTO transactionDTO, String username, String accountName) {
         Optional<Account> optionalAccount = accountService.findOptionalOfAccountInUserAccounts(accountName, username);
-        if (!optionalAccount.isPresent())
+        if (optionalAccount.isPresent())
             throw new AccountNotFoundException("Account with such name: " + accountName + " wasn't found");
 
         Transaction transaction = TransactionMapper.INSTANCE.toTransaction(transactionDTO);
