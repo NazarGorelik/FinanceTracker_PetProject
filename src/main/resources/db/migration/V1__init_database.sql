@@ -22,7 +22,7 @@ alter table account add foreign key (owner) references person (username);
 
 create table transaction(
     id int primary key auto_increment,
-    type enum('EXPENSE', 'INCOME'),
+    type varchar(10),
     amount double,
     description varchar(100),
     created_at timestamp,
@@ -30,3 +30,4 @@ create table transaction(
     account_id int
 );
 alter table transaction add foreign key (account_id) references account (id);
+alter table transaction add check (type in ('EXPENSE','INCOME'))
