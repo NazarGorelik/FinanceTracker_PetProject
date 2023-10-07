@@ -21,7 +21,7 @@ public interface PersonMapper {
     @Mapping(target = "accounts", expression = "java(mapAccounts(person))")
     AdminPersonDTO toAdminPersonDTO(Person person);
 
-    default List<AdminAccountDTO> mapAccounts(Person person){
-        return person.getAccounts().stream().map(x->AccountMapper.INSTANCE.toAdminAccountDTO(x)).collect(Collectors.toList());
+    default List<AdminAccountDTO> mapAccounts(Person person) {
+        return person.getAccounts().stream().map(x -> AccountMapper.INSTANCE.toAdminAccountDTO(x)).collect(Collectors.toList());
     }
 }

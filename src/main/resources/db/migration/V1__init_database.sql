@@ -8,7 +8,6 @@ create table person
 );
 
 
-
 create table account
 (
     id         int primary key auto_increment,
