@@ -6,13 +6,14 @@ import java_code.mappers.AccountMapper;
 import java_code.models.Account;
 import java_code.repositories.AccountRepository;
 import java_code.util.exceptions.businessLayer.AccountWithSuchNameAlreadyExistsException;
+import java_code.util.utilClassesForService.AccountServiceUtil;
+import java_code.util.utilClassesForService.PersonServiceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -22,7 +23,8 @@ import java.util.stream.Collectors;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final PersonService personService;
+    private final PersonServiceUtil personServiceUtil;
+    private final AccountServiceUtil accountServiceUtil;
 
 
     private List<Account> findAll() {
@@ -36,15 +38,11 @@ public class AccountService {
         return adminAccountDTOS;
     }
 
-    Optional<Account> findOptionalOfAccountInUserAccounts(String accountName, String username) {
-        List<Account> accounts = personService.findByUsername(username).getAccounts();
-        return accounts.stream().filter(account->account.getName().equals(accountName)).findAny();
-    }
-
     @Transactional
     public void save(AccountDTO accountDTO, String username) {
-        if (findOptionalOfAccountInUserAccounts(accountDTO.name(), username).isPresent())
+        if (accountServiceUtil.findOptionalOfAccountInUserAccounts(accountDTO.name(), username).isPresent())
             throw new AccountWithSuchNameAlreadyExistsException("Account with such name: " + accountDTO.name() + " already exists");
+
         Account account = AccountMapper.INSTANCE.toAccount(accountDTO);
         enrichAccount(account, username);
         accountRepository.save(account);
@@ -52,6 +50,6 @@ public class AccountService {
 
     private void enrichAccount(Account account, String username) {
         account.setCreatedAt(LocalDateTime.now());
-        account.setOwner(personService.findByUsername(username));
+        account.setOwner(personServiceUtil.findByUsername(username));
     }
 }

@@ -6,7 +6,7 @@ import java_code.dto.user.TransactionDTO;
 import java_code.dto.user.responses.TransactionsResponse;
 import java_code.security.UserPrincipal;
 import java_code.services.TransactionService;
-import java_code.util.ErrorUtil;
+import java_code.util.exceptions.ErrorUtil;
 import java_code.util.exceptions.presentationLayer.TransactionNotCreatedException;
 import java_code.util.validators.TransactionValidator;
 import lombok.RequiredArgsConstructor;

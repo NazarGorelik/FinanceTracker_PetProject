@@ -1,4 +1,4 @@
-package java_code.util;
+package java_code.util.exceptions;
 
 import java_code.util.exceptions.businessLayer.BusinessLayerException;
 import java_code.util.exceptions.presentationLayer.*;

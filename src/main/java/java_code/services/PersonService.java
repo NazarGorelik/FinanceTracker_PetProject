@@ -8,6 +8,7 @@ import java_code.mappers.PersonMapper;
 import java_code.models.Person;
 import java_code.repositories.PersonRepository;
 import java_code.util.exceptions.businessLayer.PersonNotFoundException;
+import java_code.util.utilClassesForService.PersonServiceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,11 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PersonServiceUtil personServiceUtil;
 
-    Person findByUsername(String username) {
-        Optional<Person> optionalPerson = personRepository.findByUsername(username);
-        if (optionalPerson.isPresent())
-            return optionalPerson.get();
-
-        throw new PersonNotFoundException("Person with such name: " + username + " wasn't found");
-    }
 
     public AdminPersonDTO findAdminPersonDTOByUsername(String username){
-        Person person = findByUsername(username);
+        Person person = personServiceUtil.findByUsername(username);
         return PersonMapper.INSTANCE.toAdminPersonDTO(person);
     }
 

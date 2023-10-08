@@ -6,7 +6,7 @@ import java_code.dto.user.responses.AuthenticationResponse;
 import java_code.dto.user.PersonDTO;
 import java_code.services.AuthService;
 import java_code.services.PersonService;
-import java_code.util.ErrorUtil;
+import java_code.util.exceptions.ErrorUtil;
 import java_code.util.exceptions.presentationLayer.InvalidCredentialsException;
 import java_code.util.exceptions.presentationLayer.PersonNotCreatedException;
 import java_code.util.validators.AuthValidator;

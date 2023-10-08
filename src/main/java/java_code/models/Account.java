@@ -10,9 +10,9 @@ import java.util.List;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "account")
 public class Account {

@@ -6,6 +6,7 @@ import java_code.models.Account;
 import java_code.models.Transaction;
 import java_code.repositories.TransactionRepository;
 import java_code.util.exceptions.businessLayer.AccountNotFoundException;
+import java_code.util.utilClassesForService.AccountServiceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final AccountService accountService;
+    private final AccountServiceUtil accountServiceUtil;
 
 
     public List<TransactionDTO> getTransactionsByAccountName(String accountName, String username) {
-        Optional<Account> optionalAccount = accountService.findOptionalOfAccountInUserAccounts(accountName, username);
+        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, username);
         if (optionalAccount.isPresent()) {
             return optionalAccount.get().getTransactions().stream().
                     map(x -> TransactionMapper.INSTANCE.toTransactionDTO(x))
@@ -36,7 +37,7 @@ public class TransactionService {
 
     @Transactional
     public void save(TransactionDTO transactionDTO, String username, String accountName) {
-        Optional<Account> optionalAccount = accountService.findOptionalOfAccountInUserAccounts(accountName, username);
+        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, username);
         if (!optionalAccount.isPresent())
             throw new AccountNotFoundException("Account with such name: " + accountName + " wasn't found");
 

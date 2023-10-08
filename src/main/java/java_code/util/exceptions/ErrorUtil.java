@@ -1,4 +1,4 @@
-package java_code.util;
+package java_code.util.exceptions;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
