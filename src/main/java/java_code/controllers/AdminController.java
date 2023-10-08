@@ -26,17 +26,17 @@ public class AdminController {
     private final PersonService personService;
     private final AccountService accountService;
 
-    @GetMapping("/allPeople")
+    @GetMapping("/people")
     public ResponseEntity<List<AdminPersonDTO>> getAllPeople(){
         return new ResponseEntity<>(personService.findAllAdminPersonDTOs(), HttpStatus.OK);
     }
 
-    @GetMapping("/allAccounts")
+    @GetMapping("/accounts")
     public AdminAccountsResponse getAllAccounts(){
         return new AdminAccountsResponse(accountService.findAllAdminAccountDTOs());
     }
 
-    @GetMapping("/getInfo/{username}")
+    @GetMapping("/info/{username}")
     public AdminPersonDTO getPersonInfo(@PathVariable("username") String username){
         return personService.findAdminPersonDTOByUsername(username);
     }

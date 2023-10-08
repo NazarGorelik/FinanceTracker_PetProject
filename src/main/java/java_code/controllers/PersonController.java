@@ -17,7 +17,7 @@ public class PersonController {
     private final PersonService personService;
 
 
-    @GetMapping("/getAccounts")
+    @GetMapping("/accounts")
     public AccountsResponse getAccounts(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return new AccountsResponse(personService.getAccountsById(userPrincipal.getPerson().getId()));
     }

@@ -26,7 +26,7 @@ public class TransactionController {
     private final ErrorUtil errorUtil;
 
 
-    @PostMapping("/{accountName}/saveTransaction")
+    @PostMapping("/{accountName}/save")
     public ResponseEntity<HttpStatus> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
                                            @PathVariable("accountName") String accountName,
                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -39,7 +39,7 @@ public class TransactionController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/{accountName}/getTransactions")
+    @GetMapping("/{accountName}/transactions")
     public TransactionsResponse getTransactions(@PathVariable("accountName") String accountName,
                                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
         String username = userPrincipal.getUsername();
