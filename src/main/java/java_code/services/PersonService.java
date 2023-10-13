@@ -7,7 +7,6 @@ import java_code.mappers.AccountMapper;
 import java_code.mappers.PersonMapper;
 import java_code.models.Person;
 import java_code.repositories.PersonRepository;
-import java_code.util.exceptions.businessLayer.BusinessLayerException;
 import java_code.util.exceptions.businessLayer.InvalidPasswordException;
 import java_code.util.exceptions.businessLayer.PersonNotFoundException;
 import java_code.util.utilClassesForService.PersonServiceUtil;
@@ -31,20 +30,19 @@ public class PersonService {
     private final PersonServiceUtil personServiceUtil;
 
 
-    public AdminPersonDTO findAdminPersonDTOByUsername(int userID) {
-        Person person = personServiceUtil.findById(userID);
-        return PersonMapper.INSTANCE.toAdminPersonDTO(person);
+    public AdminPersonDTO findAdminPersonDTOByUsername(String username) {
+        Optional<Person> optionalPerson = personRepository.findByUsername(username);
+        if(!optionalPerson.isPresent())
+            throw new PersonNotFoundException("Person with such username: " + username + " wasn't found");
+
+        return PersonMapper.INSTANCE.toAdminPersonDTO(optionalPerson.get());
     }
 
     public List<AdminPersonDTO> findAllAdminPersonDTOs() {
-        List<Person> personList = findAll();
+        List<Person> personList = personRepository.findAll();
         List<AdminPersonDTO> adminPersonDTOS = personList.stream().
                 map(x -> PersonMapper.INSTANCE.toAdminPersonDTO(x)).collect(Collectors.toList());
         return adminPersonDTOS;
-    }
-
-    private List<Person> findAll() {
-        return personRepository.findAll();
     }
 
     @Transactional
@@ -62,8 +60,7 @@ public class PersonService {
     }
 
     public List<AccountDTO> getAccountsById(int userID) {
-        Person person = findPersonOrThrowException(userID,
-                new PersonNotFoundException("Person with such id: " + userID + " wasn't found"));
+        Person person = personServiceUtil.findById(userID);
 
         return person.getAccounts().stream()
                 .map(x -> AccountMapper.INSTANCE.toAccountDTO(x))
@@ -85,21 +82,12 @@ public class PersonService {
     }
 
     private Person findPersonAndCheckPassword(int userID, String password) {
-        Person savedPerson = findPersonOrThrowException(userID,
-                new PersonNotFoundException("Person with such id: " + userID + " wasn't found"));
+        Person savedPerson = personServiceUtil.findById(userID);
 
         boolean arePasswordSame = passwordEncoder.matches(password, savedPerson.getPassword());
         if (!arePasswordSame)
             throw new InvalidPasswordException("Password does not match. Please try again");
 
         return savedPerson;
-    }
-
-    private Person findPersonOrThrowException(int userID, BusinessLayerException exception) {
-        Optional<Person> optionalPerson = personRepository.findById(userID);
-        if (!optionalPerson.isPresent())
-            throw exception;
-
-        return optionalPerson.get();
     }
 }

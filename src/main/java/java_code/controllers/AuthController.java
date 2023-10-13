@@ -13,9 +13,11 @@ import java_code.util.validators.AuthValidator;
 import java_code.util.validators.PersonValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,12 +42,12 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatus> registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
+    public HttpStatus registration(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
         personValidator.validate(personDTO, bindingResult);
         if (bindingResult.hasErrors())
             throw new PersonNotCreatedException(errorUtil.builtErrorResponse(bindingResult));
 
         personService.save(personDTO);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return HttpStatus.OK;
     }
 }

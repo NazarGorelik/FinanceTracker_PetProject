@@ -11,7 +11,6 @@ import java_code.util.exceptions.presentationLayer.TransactionNotCreatedExceptio
 import java_code.util.validators.TransactionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class TransactionController {
 
 
     @PostMapping("/{accountName}/save")
-    public ResponseEntity<HttpStatus> save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
+    public HttpStatus save(@RequestBody @Valid TransactionDTO transactionDTO, BindingResult bindingResult,
                                            @PathVariable("accountName") String accountName,
                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
         transactionValidator.validate(transactionDTO, bindingResult);
@@ -36,7 +35,7 @@ public class TransactionController {
 
         int userID = userPrincipal.getPerson().getId();
         transactionService.save(transactionDTO, userID, accountName);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return HttpStatus.OK;
     }
 
     @GetMapping("/{accountName}/transactions")
