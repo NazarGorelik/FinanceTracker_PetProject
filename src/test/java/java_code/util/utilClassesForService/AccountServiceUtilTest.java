@@ -39,9 +39,9 @@ public class AccountServiceUtilTest {
 
     @Test
     public void findOptionalOfAccountInUserAccountsTest() {
-        when(personServiceUtil.findByUsername(person.getUsername())).thenReturn(person);
+        when(personServiceUtil.findById(person.getId())).thenReturn(person);
 
-        Account userAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername()).get();
+        Account userAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getId()).get();
         assertThat(userAccount).isNotNull();
         assertThat(userAccount.getId()).isEqualTo(account.getId());
         assertThat(userAccount.getName()).isEqualTo(account.getName());

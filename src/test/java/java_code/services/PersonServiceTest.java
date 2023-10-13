@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +40,8 @@ class PersonServiceTest {
     private PersonServiceUtil personServiceUtil;
     @MockBean
     private PersonMapper personMapper;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     private Person person;
 
@@ -49,16 +52,16 @@ class PersonServiceTest {
 
     @Test
     void findAdminPersonDTOByUsernameTest() {
-        when(personServiceUtil.findByUsername(person.getUsername())).thenReturn(person);
+        when(personServiceUtil.findById(person.getId())).thenReturn(person);
         when(personMapper.toAdminPersonDTO(person)).thenReturn(new AdminPersonDTO(person.getId(), person.getUsername(),
                 person.getPassword(), person.getCreatedAt(), person.getRole(), null));
 
-        AdminPersonDTO adminPersonDTO = personService.findAdminPersonDTOByUsername(person.getUsername());
+        AdminPersonDTO adminPersonDTO = personService.findAdminPersonDTOByUsername(person.getId());
 
         assertThat(adminPersonDTO).isNotNull();
         assertThat(adminPersonDTO.id()).isGreaterThan(0);
         assertThat(adminPersonDTO).isExactlyInstanceOf(AdminPersonDTO.class);
-        verify(personServiceUtil, times(1)).findByUsername(person.getUsername());
+        verify(personServiceUtil, times(1)).findById(person.getId());
     }
 
     @Test
@@ -102,5 +105,29 @@ class PersonServiceTest {
         assertThat(accountDTOS.get(0).name()).isEqualTo(accountList.get(0).getName());
         assertThat(accountDTOS.get(0).balance()).isEqualTo(accountList.get(0).getBalance());
         verify(personRepository, times(1)).findById(person.getId());
+    }
+
+    @Test
+    void updateTest(){
+        when(personRepository.findById(person.getId())).thenReturn(Optional.of(person));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
+        PersonDTO personDTO = new PersonDTO("nazar", "nazar228");
+        when(passwordEncoder.encode(any(String.class))).thenReturn(personDTO.password());
+
+        personService.update(person.getId(), personDTO, "123");
+
+        assertThat(person.getUsername()).isEqualTo(personDTO.username());
+        assertThat(person.getPassword()).isEqualTo(personDTO.password());
+        verify(personRepository, times(1)).findById(person.getId());
+    }
+
+    @Test
+    void deleteTest(){
+        when(personRepository.findById(person.getId())).thenReturn(Optional.of(person));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
+
+        personService.delete(person.getId(), person.getPassword());
+
+        verify(personRepository, times(1)).deleteById(person.getId());
     }
 }

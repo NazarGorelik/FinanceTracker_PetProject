@@ -52,10 +52,10 @@ public class TransactionServiceTest {
 
     @Test
     void getTransactionsByAccountNameTest() {
-        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername()))
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getId()))
                 .thenReturn(Optional.of(account));
 
-        List<TransactionDTO> transactionDTOS = transactionService.getTransactionsByAccountName(account.getName(), person.getUsername());
+        List<TransactionDTO> transactionDTOS = transactionService.getTransactionsByAccountName(account.getName(), person.getId());
 
         assertThat(transactionDTOS).isNotNull();
         assertThat(list.get(0).getType()).isEqualTo(transactionDTOS.get(0).type());
@@ -64,12 +64,12 @@ public class TransactionServiceTest {
 
     @Test
     void saveTest() {
-        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername()))
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getId()))
                 .thenReturn(Optional.of(account));
         when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
 
         transactionService.save(new TransactionDTO(transaction.getType(), transaction.getDescription(), transaction.getAmount()),
-                person.getUsername(), account.getName());
+                person.getId(), account.getName());
         Transaction savedTransaction = transactionRepository.findById(transaction.getId()).get();
 
         assertThat(savedTransaction).isNotNull();

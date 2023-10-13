@@ -8,11 +8,12 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
                         name = "Nazar Gorelik",
-                        email = "nazargorelik@gmail.com"
+                        email = "bambinka228@gmail.com"
                 ),
                 description = "OpenAPI Finance Tracker",
                 title = "Finance Tracker",
@@ -33,5 +34,5 @@ import io.swagger.v3.oas.annotations.servers.Server;
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER
 )
-public class OpenApiConfig {
+public class SwaggerConfig {
 }

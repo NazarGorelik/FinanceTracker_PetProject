@@ -25,8 +25,8 @@ public class TransactionService {
     private final AccountServiceUtil accountServiceUtil;
 
 
-    public List<TransactionDTO> getTransactionsByAccountName(String accountName, String username) {
-        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, username);
+    public List<TransactionDTO> getTransactionsByAccountName(String accountName, int userID) {
+        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, userID);
         if (optionalAccount.isPresent()) {
             return optionalAccount.get().getTransactions().stream().
                     map(x -> TransactionMapper.INSTANCE.toTransactionDTO(x))
@@ -36,8 +36,8 @@ public class TransactionService {
     }
 
     @Transactional
-    public void save(TransactionDTO transactionDTO, String username, String accountName) {
-        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, username);
+    public void save(TransactionDTO transactionDTO, int userID, String accountName) {
+        Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, userID);
         if (!optionalAccount.isPresent())
             throw new AccountNotFoundException("Account with such name: " + accountName + " wasn't found");
 

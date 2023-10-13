@@ -13,8 +13,8 @@ public class AccountServiceUtil {
 
     private final PersonServiceUtil personServiceUtil;
 
-    public Optional<Account> findOptionalOfAccountInUserAccounts(String accountName, String username) {
-        List<Account> accounts = personServiceUtil.findByUsername(username).getAccounts();
+    public Optional<Account> findOptionalOfAccountInUserAccounts(String accountName, int userID) {
+        List<Account> accounts = personServiceUtil.findById(userID).getAccounts();
         return accounts.stream().filter(account->account.getName().equals(accountName)).findAny();
     }
 }

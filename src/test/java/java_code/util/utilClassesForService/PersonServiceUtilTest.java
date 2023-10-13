@@ -38,20 +38,20 @@ public class PersonServiceUtilTest {
         person = initializer.initializePerson(1, "Jack", "123", Collections.emptyList());
     }
     @Test
-    void findByUsernameSuccessTest() {
-        when(personRepository.findByUsername(person.getUsername())).thenReturn(Optional.of(person));
-        Person foundPerson = personServiceUtil.findByUsername(person.getUsername());
+    void findByIdSuccessTest() {
+        when(personRepository.findById(person.getId())).thenReturn(Optional.of(person));
+        Person foundPerson = personServiceUtil.findById(person.getId());
 
         assertThat(foundPerson).isNotNull();
         assertThat(foundPerson.getId()).isGreaterThan(0);
         assertThat(person).isEqualTo(foundPerson);
-        verify(personRepository, times(1)).findByUsername(person.getUsername());
+        verify(personRepository, times(1)).findById(person.getId());
     }
 
     @Test
-    void findByUsernameFailureTest() {
+    void findByIdFailureTest() {
         assertThatExceptionOfType(PersonNotFoundException.class)
-                .isThrownBy(() -> personServiceUtil.findByUsername("fake name"));
-        verify(personRepository, times(1)).findByUsername("fake name");
+                .isThrownBy(() -> personServiceUtil.findById(-1));
+        verify(personRepository, times(1)).findById(-1);
     }
 }

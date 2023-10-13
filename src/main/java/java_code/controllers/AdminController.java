@@ -1,9 +1,9 @@
 package java_code.controllers;
 
-import io.swagger.v3.oas.annotations.Hidden;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java_code.dto.admin.AdminPersonDTO;
 import java_code.dto.admin.responses.AdminAccountsResponse;
-import java_code.dto.admin.responses.AdminPeopleResponse;
 import java_code.services.AccountService;
 import java_code.services.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/admin")
-@Hidden
 public class AdminController {
 
     private final PersonService personService;
@@ -37,7 +36,7 @@ public class AdminController {
     }
 
     @GetMapping("/info/{username}")
-    public AdminPersonDTO getPersonInfo(@PathVariable("username") String username){
-        return personService.findAdminPersonDTOByUsername(username);
+    public AdminPersonDTO getPersonInfo(@PathVariable("userID") int userID){
+        return personService.findAdminPersonDTOByUsername(userID);
     }
 }

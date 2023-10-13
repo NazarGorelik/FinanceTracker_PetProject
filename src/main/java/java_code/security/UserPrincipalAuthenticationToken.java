@@ -9,7 +9,7 @@ public class UserPrincipalAuthenticationToken extends AbstractAuthenticationToke
 
     private final UserPrincipal userPrincipal;
 
-    public UserPrincipalAuthenticationToken(Collection<? extends GrantedAuthority> authorities, UserPrincipal userPrincipal) {
+    public UserPrincipalAuthenticationToken(UserPrincipal userPrincipal) {
         super(userPrincipal.getAuthorities());
         this.userPrincipal = userPrincipal;
         setAuthenticated(true);

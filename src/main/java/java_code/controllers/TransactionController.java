@@ -34,15 +34,15 @@ public class TransactionController {
         if (bindingResult.hasErrors())
             throw new TransactionNotCreatedException(errorUtil.builtErrorResponse(bindingResult));
 
-        String username = userPrincipal.getUsername();
-        transactionService.save(transactionDTO, username, accountName);
+        int userID = userPrincipal.getPerson().getId();
+        transactionService.save(transactionDTO, userID, accountName);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("/{accountName}/transactions")
     public TransactionsResponse getTransactions(@PathVariable("accountName") String accountName,
                                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        String username = userPrincipal.getUsername();
-        return new TransactionsResponse(transactionService.getTransactionsByAccountName(accountName, username));
+        int userID = userPrincipal.getPerson().getId();
+        return new TransactionsResponse(transactionService.getTransactionsByAccountName(accountName, userID));
     }
 }

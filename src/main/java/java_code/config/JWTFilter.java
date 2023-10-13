@@ -29,7 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
         extractTokenFromRequest(request)
                 .map(x->jwtDecoder.decode(x))
                 .map(x->jwtToPrincipalConverter.convert(x))
-                .map(x->new UserPrincipalAuthenticationToken(x.getAuthorities(), x))
+                .map(userPrincipal->new UserPrincipalAuthenticationToken(userPrincipal))
                 .ifPresent(authentication-> SecurityContextHolder.getContext().setAuthentication(authentication));
 
         filterChain.doFilter(request, response);

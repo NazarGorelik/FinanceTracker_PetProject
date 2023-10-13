@@ -64,13 +64,13 @@ public class AccountServiceTest {
     @Test
     void saveSuccessTest() {
         Person person = initializer.initializePerson(1, "Jack", "123", Collections.emptyList());
-        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername()))
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getId()))
                 .thenReturn(Optional.empty());
-        when(personServiceUtil.findByUsername(person.getUsername())).thenReturn(person);
+        when(personServiceUtil.findById(person.getId())).thenReturn(person);
         when(accountRepository.findById(any(Integer.class))).thenReturn(Optional.of(account));
 
         AccountDTO accountDTO = new AccountDTO(account.getBalance(), account.getName());
-        accountService.save(accountDTO, person.getUsername());
+        accountService.save(accountDTO, person.getId());
         Account savedAccount = accountRepository.findById(1).get();
 
         assertThat(savedAccount).isEqualTo(account);
@@ -80,15 +80,37 @@ public class AccountServiceTest {
     @Test
     void saveFailureTest() {
         Person person = initializer.initializePerson(1, "Jack", "123", Collections.emptyList());
-        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername()))
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), person.getId()))
                 .thenReturn(Optional.of(account));
-        when(personServiceUtil.findByUsername(person.getUsername())).thenReturn(person);
+        when(personServiceUtil.findById(person.getId())).thenReturn(person);
 
         AccountDTO accountDTO = new AccountDTO(account.getBalance(), account.getName());
 
         assertThatExceptionOfType(AccountWithSuchNameAlreadyExistsException.class)
-                .isThrownBy(() -> accountService.save(accountDTO, person.getUsername()));
+                .isThrownBy(() -> accountService.save(accountDTO, person.getId()));
         verify(accountServiceUtil, times(1))
-                .findOptionalOfAccountInUserAccounts(account.getName(), person.getUsername());
+                .findOptionalOfAccountInUserAccounts(account.getName(), person.getId());
+    }
+
+    @Test
+    void updateTest(){
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), 1))
+                .thenReturn(Optional.of(account));
+
+        AccountDTO accountDTO = new AccountDTO(666d, "Wallet");
+        accountService.update(1, accountDTO, account.getName());
+
+        assertThat(account.getName()).isEqualTo(accountDTO.name());
+        assertThat(account.getBalance()).isEqualTo(accountDTO.balance());
+    }
+
+    @Test
+    void deleteTest(){
+        when(accountServiceUtil.findOptionalOfAccountInUserAccounts(account.getName(), 1))
+                .thenReturn(Optional.of(account));
+
+        accountService.delete(1, account.getName());
+
+        verify(accountRepository, times(1)).deleteById(account.getId());
     }
 }
