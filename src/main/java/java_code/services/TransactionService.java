@@ -8,6 +8,8 @@ import java_code.repositories.TransactionRepository;
 import java_code.util.exceptions.businessLayer.AccountNotFoundException;
 import java_code.util.utilClassesForService.AccountServiceUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class TransactionService {
     private final AccountServiceUtil accountServiceUtil;
 
 
+    @Cacheable(cacheNames = "transactions", key = "#accountName")
     public List<TransactionDTO> getTransactionsByAccountName(String accountName, int userID) {
         Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, userID);
         if (optionalAccount.isPresent()) {
@@ -35,6 +38,7 @@ public class TransactionService {
         throw new AccountNotFoundException("Account with such name: " + accountName + " wasn't found");
     }
 
+    @CachePut(cacheNames = "transactions", key = "#accountName")
     @Transactional
     public void save(TransactionDTO transactionDTO, int userID, String accountName) {
         Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountName, userID);

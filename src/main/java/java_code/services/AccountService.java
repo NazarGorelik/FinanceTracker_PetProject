@@ -11,6 +11,9 @@ import java_code.util.exceptions.businessLayer.BusinessLayerException;
 import java_code.util.utilClassesForService.AccountServiceUtil;
 import java_code.util.utilClassesForService.PersonServiceUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,7 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
+    @Cacheable(cacheNames = "accounts", key = "#accountDTO.name()")
     @Transactional
     public void save(AccountDTO accountDTO, int userID) {
         Optional<Account> optionalAccount = accountServiceUtil.findOptionalOfAccountInUserAccounts(accountDTO.name(), userID);
@@ -57,6 +61,7 @@ public class AccountService {
         account.setOwner(personServiceUtil.findById(userID));
     }
 
+    @CachePut(cacheNames = "accounts", key = "#accountName")
     @Transactional
     public void update(int userID, AccountDTO updatedAccount, String accountName) {
         Account account = findAccountInUserAccountsOrThrowException(accountName, userID,
@@ -66,6 +71,7 @@ public class AccountService {
         account.setBalance(updatedAccount.balance());
     }
 
+    @CacheEvict(cacheNames = "accounts", key = "#accountName")
     @Transactional
     public void delete(int userID, String accountName) {
         Account account = findAccountInUserAccountsOrThrowException(accountName, userID,

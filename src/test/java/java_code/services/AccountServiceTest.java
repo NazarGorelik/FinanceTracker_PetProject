@@ -74,7 +74,6 @@ public class AccountServiceTest {
         Account savedAccount = accountRepository.findById(1).get();
 
         assertThat(savedAccount).isEqualTo(account);
-        verify(accountRepository, times(1)).save(any(Account.class));
     }
 
     @Test

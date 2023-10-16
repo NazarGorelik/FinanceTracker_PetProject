@@ -8,6 +8,7 @@ import java_code.repositories.TransactionRepository;
 import java_code.util.TransactionType;
 import java_code.util.utilClassesForService.AccountServiceUtil;
 import java_code.utilClassesForTesting.Initializer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,12 +44,12 @@ public class TransactionServiceTest {
     List<Transaction> list;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         transaction = initializer.initializeTransaction(1, TransactionType.INCOME, "Salary", 1000d);
         Transaction transaction1 = initializer.initializeTransaction(2, TransactionType.EXPENSE, "Products", 200d);
         list = List.of(transaction, transaction1);
-        account = initializer.initializeAccount(1, "PayPal", 1000d, List.of(transaction, transaction1));
-        person = initializer.initializePerson(1, "Jack", "123", Collections.emptyList());
+        account = initializer.initializeAccount(1, "PayPal", 1000d,list);
+        person = initializer.initializePerson(1, "Jack", "123", Collections.singletonList(account));
     }
 
     @Test

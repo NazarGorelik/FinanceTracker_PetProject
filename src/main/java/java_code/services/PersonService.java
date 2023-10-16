@@ -11,6 +11,9 @@ import java_code.util.exceptions.businessLayer.InvalidPasswordException;
 import java_code.util.exceptions.businessLayer.PersonNotFoundException;
 import java_code.util.utilClassesForService.PersonServiceUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +62,7 @@ public class PersonService {
         person.setPassword(encodedPassword);
     }
 
+    @Cacheable(cacheNames = "personAccounts", key = "#userID")
     public List<AccountDTO> getAccountsById(int userID) {
         Person person = personServiceUtil.findById(userID);
 
@@ -67,6 +71,7 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
+    @CachePut(cacheNames = "people", key = "#userID")
     @Transactional
     public void update(int userID, PersonDTO updatedPerson, String password) {
         Person savedPerson = findPersonAndCheckPassword(userID, password);
@@ -75,6 +80,7 @@ public class PersonService {
         savedPerson.setPassword(passwordEncoder.encode(updatedPerson.password()));
     }
 
+    @CacheEvict(cacheNames = "people", key="#userID")
     @Transactional
     public void delete(int userID, String password) {
         findPersonAndCheckPassword(userID, password);
